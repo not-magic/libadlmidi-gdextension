@@ -104,7 +104,7 @@ This extension builds and has been manually tested end-to-end in the Godot edito
 
 ## License
 
-This repository's own extension code doesn't carry an explicit license yet. Its dependencies do:
+This repository's own extension code is MIT licensed (see `LICENSE`). Its dependencies carry their own terms:
 
 - `godot-cpp` is MIT licensed.
 - `libADLMIDI` is licensed under a mix of LGPL 2.1+/2+, GPL v2+/v3+, MIT, BSD 3-Clause, and the Boost Software License, varying by component (embedded FM banks carry their own terms too) — see [libADLMIDI's README](https://github.com/Wohlstand/libADLMIDI#license) for the full breakdown before redistributing a build of this extension.
