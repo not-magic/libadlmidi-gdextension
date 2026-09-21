@@ -1,4 +1,4 @@
-# libadlmidi-gdextension
+# libADLMIDI-gdextension
 
 A Godot 4 GDExtension that adds MIDI playback and real-time MIDI music generation, rendered as OPL3 FM synthesis audio via [libADLMIDI](https://github.com/Wohlstand/libADLMIDI).
 
