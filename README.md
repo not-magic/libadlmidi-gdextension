@@ -1,0 +1,110 @@
+# libadlmidi-gdextension
+
+A Godot 4 GDExtension that adds MIDI playback and real-time MIDI music generation, rendered as OPL3 FM synthesis audio via [libADLMIDI](https://github.com/Wohlstand/libADLMIDI).
+
+It adds two new `AudioStream` types:
+
+- `AudioStreamMIDI` — loads and plays `.mid`/`.midi` files through the normal Godot audio pipeline (`AudioStreamPlayer`, `AudioStreamPlayer2D`/`3D`) just like a `.wav` or `.ogg`.
+- `AudioStreamMIDISequencer` — a live OPL3 synth with no fixed song, driven directly from code (note on/off, controller changes, pitch bend, ...) for procedurally generated music.
+
+## Features
+
+- Loads `.mid`, `.midi`, `.rmi`, `.xmi`, and `.kar` files directly as an `AudioStream` resource (`res://song.mid`).
+- Plays through libADLMIDI's built-in MIDI sequencer, including loop point support (`loopStart`/`loopEnd` tags).
+- `AudioStreamMIDISequencer` needs no file at all — drive its playback directly with `note_on`/`note_off`/`controller_change`/`pitch_bend`/... for generative/procedural music.
+- Configurable synth: emulated OPL3 chip count, emulator core (Nuked, DOSBox, Opal, YMFM, ESFMu, MAME, ...), embedded or custom (WOPL) instrument bank, volume model, four-op channel count.
+- Song metadata (on `AudioStreamMIDI`): title, copyright, track titles, track/song count, loop start/end time, total length.
+- Multiple concurrent playbacks of the same stream resource each get their own independent synth state.
+
+## Requirements
+
+- Godot 4.3 or newer (bindings are generated against the Godot 4.7.2 API, see `extension_api.json`).
+- [SCons](https://scons.org/) and a C++17-capable compiler to build the extension from source.
+- Git (for submodules).
+
+## Getting the code
+
+```bash
+git clone --recurse-submodules <this repo's URL>
+# or, if you already cloned without submodules:
+git submodule update --init --recursive
+```
+
+This pulls in the two dependencies as submodules:
+
+- [`godot-cpp`](https://github.com/godotengine/godot-cpp) — the official C++ bindings for Godot's GDExtension API.
+- [`libADLMIDI`](https://github.com/Wohlstand/libADLMIDI) — the OPL3 MIDI synthesizer library doing the actual sound generation.
+
+## Building
+
+```bash
+scons platform=linux target=template_debug -j$(nproc)
+```
+
+Swap `platform=linux` for `windows` or `macos`, and use `target=template_release` for a release/export build. The first build compiles godot-cpp's full binding set and libADLMIDI from source, so it takes a while; rebuilds after that are incremental.
+
+The result is written to `demo/bin/`, matching the paths already referenced by `demo/bin/adlmidi.gdextension` (e.g. `demo/bin/libadlmidi.linux.template_debug.x86_64.so`).
+
+See `CLAUDE.md` for more build/architecture detail.
+
+## Using it in a Godot project
+
+To use this in your own Godot project, copy `demo/bin/adlmidi.gdextension` and the built library file(s) for your target platform(s) into your project's `res://bin/` folder (or wherever you keep GDExtensions), then reload the project. `AudioStreamMIDI` and `AudioStreamMIDISequencer` will show up as normal resource types.
+
+The `demo/` folder is itself a minimal Godot project set up against the extension's build output, useful as a starting point or for manually testing changes — open `demo/project.godot` in the editor after building.
+
+### Playing a MIDI file
+
+```gdscript
+var player := AudioStreamPlayer.new()
+add_child(player)
+player.stream = load("res://song.mid")
+player.play()
+```
+
+Or build the stream programmatically:
+
+```gdscript
+var stream := AudioStreamMIDI.new()
+stream.midi_data = FileAccess.get_file_as_bytes("res://song.mid")
+stream.num_chips = 6
+stream.emulator = 0 # Nuked
+player.stream = stream
+player.play()
+```
+
+### Generating music in real time
+
+Use `AudioStreamMIDISequencer` and drive its playback directly — it behaves like a live OPL3 synth with no fixed song:
+
+```gdscript
+var stream := AudioStreamMIDISequencer.new()
+player.stream = stream
+player.play()
+
+var playback := player.get_stream_playback() as AudioStreamPlaybackMIDISequencer
+playback.note_on(0, 60, 100)   # channel 0, middle C, velocity 100
+playback.note_off(0, 60)
+```
+
+### Inspecting a loaded song
+
+```gdscript
+var stream: AudioStreamMIDI = load("res://song.mid")
+print(stream.get_title(), " - ", stream.get_length(), "s")
+for i in stream.get_track_count():
+    print(stream.get_track_title(i))
+```
+
+See `src/audio_stream_midi.h` for the full set of properties and methods on `AudioStreamMIDI`/`AudioStreamPlaybackMIDI`, and `src/audio_stream_midi_sequencer.h` for `AudioStreamMIDISequencer`/`AudioStreamPlaybackMIDISequencer`.
+
+## Status
+
+This extension builds and has been manually tested end-to-end in the Godot editor (see `demo/`), plus verified with standalone smoke tests against the compiled libADLMIDI objects. There is no automated test suite yet, and it hasn't been exercised outside of Linux.
+
+## License
+
+This repository's own extension code doesn't carry an explicit license yet. Its dependencies do:
+
+- `godot-cpp` is MIT licensed.
+- `libADLMIDI` is licensed under a mix of LGPL 2.1+/2+, GPL v2+/v3+, MIT, BSD 3-Clause, and the Boost Software License, varying by component (embedded FM banks carry their own terms too) — see [libADLMIDI's README](https://github.com/Wohlstand/libADLMIDI#license) for the full breakdown before redistributing a build of this extension.

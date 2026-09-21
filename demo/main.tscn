@@ -3,24 +3,53 @@
 [ext_resource type="Script" uid="uid://dndbu6wgv7gu2" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="AudioStream" uid="uid://b14aht2laqnxg" path="res://win-passport.mid" id="2_0xm2m"]
 
+[sub_resource type="AudioStreamMIDISequencer" id="AudioStreamMIDISequencer_nqwlg"]
+
 [node name="Main" type="Control" unique_id=1312304179]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -7.0
+offset_right = -12.0
+offset_bottom = -7.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ig7tw")
 
 [node name="PlayButton" type="Button" parent="." unique_id=534739246]
 layout_mode = 0
-offset_left = 411.0
-offset_top = 249.0
-offset_right = 540.0
-offset_bottom = 315.0
+offset_left = 226.0
+offset_top = 145.0
+offset_right = 355.0
+offset_bottom = 211.0
 text = "Play"
+
+[node name="StopButton" type="Button" parent="." unique_id=1632822646]
+layout_mode = 0
+offset_left = 364.0
+offset_top = 144.0
+offset_right = 493.0
+offset_bottom = 210.0
+text = "Stop"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=395453540]
 stream = ExtResource("2_0xm2m")
 
+[node name="NoteButton" type="Button" parent="." unique_id=1006606485]
+layout_mode = 0
+offset_left = 235.0
+offset_top = 284.0
+offset_right = 309.0
+offset_bottom = 348.0
+text = "Note"
+
+[node name="SequencerPlayer" type="AudioStreamPlayer" parent="." unique_id=85246252]
+stream = SubResource("AudioStreamMIDISequencer_nqwlg")
+autoplay = true
+
 [connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="StopButton" to="." method="_on_stop_button_pressed"]
+[connection signal="button_down" from="NoteButton" to="." method="_on_note_button_button_down"]
+[connection signal="button_up" from="NoteButton" to="." method="_on_note_button_button_up"]

@@ -1,6 +1,8 @@
 #include "register_types.h"
 
 #include "audio_stream_midi.h"
+#include "audio_stream_midi_base.h"
+#include "audio_stream_midi_sequencer.h"
 #include "resource_format_loader_midi.h"
 
 #include <gdextension_interface.h>
@@ -17,8 +19,11 @@ void initialize_adlmidi_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
+	GDREGISTER_ABSTRACT_CLASS(AudioStreamMIDIBase);
 	GDREGISTER_CLASS(AudioStreamMIDI);
 	GDREGISTER_CLASS(AudioStreamPlaybackMIDI);
+	GDREGISTER_CLASS(AudioStreamMIDISequencer);
+	GDREGISTER_CLASS(AudioStreamPlaybackMIDISequencer);
 	GDREGISTER_CLASS(ResourceFormatLoaderMIDI);
 
 	midi_loader.instantiate();

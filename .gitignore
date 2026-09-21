@@ -8,3 +8,6 @@ demo/bin/*.dll
 demo/bin/*.dylib
 demo/bin/*.a
 demo/.godot/
+tests/bin/
+tests/*.o
+tests/*.os

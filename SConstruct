@@ -87,7 +87,8 @@ adlmidi_relative_sources = [
     "chips/ymfm/ymfm_ssg.cpp",
 ]
 
-sources += [adlmidi_env.SharedObject(os.path.join(libadlmidi_build_dir, f)) for f in adlmidi_relative_sources]
+adlmidi_objects = [adlmidi_env.SharedObject(os.path.join(libadlmidi_build_dir, f)) for f in adlmidi_relative_sources]
+sources += adlmidi_objects
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
@@ -114,3 +115,55 @@ else:
     )
 
 Default(library)
+
+# --- Standalone libADLMIDI-level tests (tests/) ---
+#
+# These link straight against the same libADLMIDI objects compiled above
+# plus MidiScheduler (src/midi_scheduler.*, no godot-cpp dependency) -- no
+# GDExtension layer involved.
+#
+# Opt-in and off by default:
+#   scons tests=yes              build tests/*.cpp into tests/bin/
+#   scons tests=yes run_tests=yes   ...and run each one, failing the build
+#                                    if any test exits non-zero
+build_tests = ARGUMENTS.get("tests", "no").lower() in ("1", "true", "yes")
+run_tests = ARGUMENTS.get("run_tests", "no").lower() in ("1", "true", "yes")
+
+if build_tests:
+    test_env = adlmidi_env.Clone()
+    if env["platform"] != "windows":
+        test_env.Append(LIBS=["pthread"])
+
+    # Built separately (under build/tests/) from the main extension's own
+    # copy of the same source, so the two differently-configured
+    # environments (this one has no godot-cpp) don't fight over one output
+    # file.
+    midi_scheduler_test_object = test_env.Object("build/tests/midi_scheduler", "src/midi_scheduler.cpp")
+
+    def _run_test(target, source, env):
+        import subprocess
+
+        program = str(source[0])
+        print("Running {} ...".format(program))
+        result = subprocess.run([program])
+        if result.returncode != 0:
+            print("FAILED: {} (exit code {})".format(program, result.returncode))
+            return 1
+        print("PASSED: {}".format(program))
+        return 0
+
+    for test_source in Glob("tests/*.cpp"):
+        test_name = os.path.splitext(os.path.basename(str(test_source)))[0]
+        test_sources = [test_source, midi_scheduler_test_object] + adlmidi_objects
+
+        test_program = test_env.Program("tests/bin/{}".format(test_name), source=test_sources)
+        Default(test_program)
+
+        if run_tests:
+            test_stamp = test_env.Command(
+                "tests/bin/{}.ran".format(test_name),
+                test_program,
+                Action(_run_test, "Running $SOURCE"),
+            )
+            test_env.AlwaysBuild(test_stamp)
+            Default(test_stamp)
