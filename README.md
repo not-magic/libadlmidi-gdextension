@@ -100,7 +100,11 @@ See `src/audio_stream_midi.h` for the full set of properties and methods on `Aud
 
 ## Status
 
-This extension builds and has been manually tested end-to-end in the Godot editor (see `demo/`), plus verified with standalone smoke tests against the compiled libADLMIDI objects. There is no automated test suite yet, and it hasn't been exercised outside of Linux.
+This extension builds and has been manually tested end-to-end in the Godot editor on Linux (see `demo/`). CI (`.github/workflows/build.yml`) builds and runs the standalone test suite (`tests/`) on Linux, Windows, and macOS on every push/PR, but the Windows/macOS builds haven't been manually exercised inside the Godot editor.
+
+## Releases
+
+Pushing a `v*` tag (or running the "Release" workflow manually with a tag) builds `template_debug` and `template_release` for Linux, Windows, and macOS, then publishes a GitHub Release with a zip of the ready-to-install `demo/addons/ADLMIDI/` folder (binaries for every platform included) attached.
 
 ## License
 

@@ -61,6 +61,13 @@ scons platform=linux target=template_debug tests=yes run_tests=yes   # ...and ru
 
 `run_tests=yes` fails the `scons` invocation (non-zero exit) if any test exits non-zero. godot-cpp's own option parser will print `WARNING: Unknown SCons variables were passed and will be ignored` for `tests`/`run_tests` — harmless; they're read directly from `ARGUMENTS` in the root `SConstruct`, not through godot-cpp's `Variables` object.
 
+### CI / releases (.github/workflows/)
+
+- `build.yml` — on every push to `main` and on PRs, builds `template_debug` and runs `tests=yes run_tests=yes` on Linux, Windows, and macOS runners. Compile-only sanity check; doesn't publish anything.
+- `release.yml` — on pushing a `v*` tag (or manual dispatch with a tag input), builds `template_debug` + `template_release` for all three platforms, then zips `demo/addons/ADLMIDI/` (source-free, with every platform's binaries) into a GitHub Release asset. Deliberately does **not** commit binaries into the repo — the Asset Library's GitHub-commit-based download can't see them either way, so a submission should use the release zip as a "Custom" download URL rather than pointing at a commit.
+
+Both cache SCons build objects via `actions/cache` keyed on `src/`, `SConstruct`, and `extension_api.json` (using SCons's built-in `SCONS_CACHE` support, already wired into godot-cpp's `SConstruct`) to avoid recompiling godot-cpp's ~2100-file binding set from scratch on every run.
+
 ## Architecture notes for future work
 
 - godot-cpp virtual method overrides in extension classes are **underscore-prefixed** (`_start`, `_mix_resampled`, `_instantiate_playback`, ...) — this differs from the non-prefixed names used by core-engine C++ modules (like the fluidsynth reference module), so don't copy method names verbatim from a core module; check the relevant `godot-cpp/gen/include/godot_cpp/classes/*.hpp` for the exact GDExtension virtual signature instead.
