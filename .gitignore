@@ -1,1 +1,10 @@
-
+.sconsign.dblite
+.sconf_temp/
+build/
+src/*.o
+src/*.os
+demo/bin/*.so
+demo/bin/*.dll
+demo/bin/*.dylib
+demo/bin/*.a
+demo/.godot/

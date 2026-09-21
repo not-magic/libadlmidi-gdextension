@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://gv0iy4eemaf3"]
+
+[ext_resource type="Script" uid="uid://dndbu6wgv7gu2" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="AudioStream" path="/home/cdl/Downloads/win-passport.mid" id="2_0xm2m"]
+
+[node name="Main" type="Control" unique_id=1312304179]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ig7tw")
+
+[node name="PlayButton" type="Button" parent="." unique_id=534739246]
+layout_mode = 0
+offset_left = 411.0
+offset_top = 249.0
+offset_right = 540.0
+offset_bottom = 315.0
+text = "Play"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=395453540]
+stream = ExtResource("2_0xm2m")
+
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
