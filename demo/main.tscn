@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://gv0iy4eemaf3"]
 
 [ext_resource type="Script" uid="uid://dndbu6wgv7gu2" path="res://main.gd" id="1_ig7tw"]
-[ext_resource type="AudioStream" path="/home/cdl/Downloads/win-passport.mid" id="2_0xm2m"]
+[ext_resource type="AudioStream" uid="uid://b14aht2laqnxg" path="res://win-passport.mid" id="2_0xm2m"]
 
 [node name="Main" type="Control" unique_id=1312304179]
 layout_mode = 3
