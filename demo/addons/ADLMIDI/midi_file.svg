@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" role="img" aria-label="MIDI file icon">
+  <title>MIDI file</title>
+
+  <!-- Page with folded corner -->
+  <path d="M3 1 H10.5 L13.5 4 V14.5 a0.5 0.5 0 0 1 -0.5 0.5 H3 a0.5 0.5 0 0 1 -0.5 -0.5 V1.5 a0.5 0.5 0 0 1 0.5 -0.5 Z"
+        fill="#F5F3FF" stroke="#6D28D9" stroke-width="1" stroke-linejoin="round"/>
+  <path d="M10.5 1 V3.5 a0.5 0.5 0 0 0 0.5 0.5 H13.5 Z" fill="#DDD6FE"/>
+
+  <!-- Beamed eighth notes, simplified for 16x16 -->
+  <g fill="#6D28D9">
+    <rect x="5.3" y="4.3" width="5.4" height="1.5"/>
+    <rect x="5.3" y="4.3" width="1.2" height="6.5"/>
+    <rect x="9.5" y="4.3" width="1.2" height="6.5"/>
+    <circle cx="5" cy="11.3" r="1.5"/>
+    <circle cx="9.2" cy="11.3" r="1.5"/>
+  </g>
+</svg>

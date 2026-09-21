@@ -12,3 +12,7 @@ windows.debug.x86_64 = "res://addons/ADLMIDI/bin/libadlmidi.windows.template_deb
 windows.release.x86_64 = "res://addons/ADLMIDI/bin/libadlmidi.windows.template_release.x86_64.dll"
 macos.debug = "res://addons/ADLMIDI/bin/libadlmidi.macos.template_debug.framework"
 macos.release = "res://addons/ADLMIDI/bin/libadlmidi.macos.template_release.framework"
+
+[icons]
+
+AudioStreamMIDI = "res://addons/ADLMIDI/midi_file.svg"
