@@ -27,7 +27,7 @@ Playback classes derive from godot-cpp's **`AudioStreamPlaybackResampled`** (not
 - `godot-cpp/` — git submodule (branch `4.5`), the official C++ bindings for Godot's GDExtension API.
 - `libADLMIDI/` — git submodule, the MIDI/OPL3 synth library being wrapped. Public C API: `libADLMIDI/include/adlmidi.h` (`extern "C"`, `adl_*`/`ADL_*`).
 - `extension_api.json` (repo root) — GDExtension API dump from Godot v4.7.2. The root `SConstruct` defaults `custom_api_file` to this so bindings match the target Godot version (overridable with `scons custom_api_file=...`).
-- `demo/` — a minimal Godot project for manually exercising the extension. `demo/bin/adlmidi.gdextension` is the extension descriptor; `demo/bin/*.so|*.dll|*.dylib` are build output (gitignored).
+- `demo/` — a minimal Godot project for manually exercising the extension, with the addon already installed at `demo/addons/ADLMIDI/` (`adlmidi.gdextension` is the extension descriptor, `plugin.cfg`/`plugin.gd` are a no-op `EditorPlugin` purely so it shows up under Project Settings > Plugins; `demo/addons/ADLMIDI/bin/*.so|*.dll|*.dylib` are build output, gitignored). This is also the layout to copy into `res://addons/` in another project, and the shape a Godot Asset Library submission for this extension would use.
 - `tests/` — standalone libADLMIDI-level regression tests, opt-in via `scons tests=yes` (see "Standalone tests" below). `tests/bin/` is build output (gitignored).
 - `build/libADLMIDI/` — libADLMIDI's compiled object files (gitignored). The root `SConstruct` builds them here via `VariantDir` instead of in-place, specifically so the `libADLMIDI/` submodule's working tree never picks up untracked build artifacts.
 
@@ -40,7 +40,7 @@ git submodule update --init --recursive   # first time only
 scons platform=linux target=template_debug -j$(nproc)
 ```
 
-Swap `platform=linux` for `windows`/`macos` as needed, and `target=template_debug` for `target=template_release` for a release/export build. Output lands in `demo/bin/libadlmidi<suffix><SHLIBSUFFIX>` (e.g. `demo/bin/libadlmidi.linux.template_debug.x86_64.so`), matching the filenames already referenced in `demo/bin/adlmidi.gdextension`. The first build compiles godot-cpp's full binding set from scratch (~2100 files) plus libADLMIDI with every default OPL3 emulator backend — this takes a while but is a one-time cost; re-running `scons` after touching only `src/` is fast and incremental (SCons correctly no-ops on files it hasn't seen change).
+Swap `platform=linux` for `windows`/`macos` as needed, and `target=template_debug` for `target=template_release` for a release/export build. Output lands in `demo/addons/ADLMIDI/bin/libadlmidi<suffix><SHLIBSUFFIX>` (e.g. `demo/addons/ADLMIDI/bin/libadlmidi.linux.template_debug.x86_64.so`), matching the filenames already referenced in `demo/addons/ADLMIDI/adlmidi.gdextension`. The first build compiles godot-cpp's full binding set from scratch (~2100 files) plus libADLMIDI with every default OPL3 emulator backend — this takes a while but is a one-time cost; re-running `scons` after touching only `src/` is fast and incremental (SCons correctly no-ops on files it hasn't seen change).
 
 ### libADLMIDI source list
 

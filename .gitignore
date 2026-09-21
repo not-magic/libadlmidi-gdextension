@@ -3,10 +3,10 @@
 build/
 src/*.o
 src/*.os
-demo/bin/*.so
-demo/bin/*.dll
-demo/bin/*.dylib
-demo/bin/*.a
+demo/addons/ADLMIDI/bin/*.so
+demo/addons/ADLMIDI/bin/*.dll
+demo/addons/ADLMIDI/bin/*.dylib
+demo/addons/ADLMIDI/bin/*.a
 demo/.godot/
 tests/bin/
 tests/*.o

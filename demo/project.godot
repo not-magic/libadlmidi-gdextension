@@ -17,3 +17,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="ADLMIDI GDExtension Demo"
 run/main_scene="uid://gv0iy4eemaf3"
 config/features=PackedStringArray("4.7")
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/ADLMIDI/plugin.cfg")

@@ -43,15 +43,15 @@ scons platform=linux target=template_debug -j$(nproc)
 
 Swap `platform=linux` for `windows` or `macos`, and use `target=template_release` for a release/export build. The first build compiles godot-cpp's full binding set and libADLMIDI from source, so it takes a while; rebuilds after that are incremental.
 
-The result is written to `demo/bin/`, matching the paths already referenced by `demo/bin/adlmidi.gdextension` (e.g. `demo/bin/libadlmidi.linux.template_debug.x86_64.so`).
+The result is written to `demo/addons/ADLMIDI/bin/`, matching the paths already referenced by `demo/addons/ADLMIDI/adlmidi.gdextension` (e.g. `demo/addons/ADLMIDI/bin/libadlmidi.linux.template_debug.x86_64.so`).
 
 See `CLAUDE.md` for more build/architecture detail.
 
 ## Using it in a Godot project
 
-To use this in your own Godot project, copy `demo/bin/adlmidi.gdextension` and the built library file(s) for your target platform(s) into your project's `res://bin/` folder (or wherever you keep GDExtensions), then reload the project. `AudioStreamMIDI` and `AudioStreamMIDISequencer` will show up as normal resource types.
+To use this in your own Godot project, copy `demo/addons/ADLMIDI/` into your project's `res://addons/` folder, then reload the project. `AudioStreamMIDI` and `AudioStreamMIDISequencer` will show up as normal resource types; the addon shows up (and can be enabled/disabled) under Project Settings > Plugins.
 
-The `demo/` folder is itself a minimal Godot project set up against the extension's build output, useful as a starting point or for manually testing changes — open `demo/project.godot` in the editor after building.
+The `demo/` folder is itself a minimal Godot project with the addon already installed and enabled, useful as a starting point or for manually testing changes — open `demo/project.godot` in the editor after building.
 
 ### Playing a MIDI file
 
