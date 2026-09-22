@@ -100,6 +100,7 @@ private:
 	ADL_MIDIPlayer *player = nullptr;
 	int current_frame = 0;
 	std::deque<QueuedMessage> message_queue;
+	bool message_queue_dirty = false;
 	DispatchCallback dispatch_callback = nullptr;
 	void *dispatch_callback_userdata = nullptr;
 
@@ -126,7 +127,8 @@ public:
 	int get_current_frame() const { return current_frame; }
 	size_t get_queue_size() const { return message_queue.size(); }
 
-	// Sorts the queue by time, then fills p_dst_buffer with p_frame_count
+	// Sorts the queue by time (only if it's changed since the last sort),
+	// then fills p_dst_buffer with p_frame_count
 	// frames of interleaved float stereo audio, alternating between
 	// generating audio up to the next due message and dispatching every
 	// message that's become due, so messages take effect at the right

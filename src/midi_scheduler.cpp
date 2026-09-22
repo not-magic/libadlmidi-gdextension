@@ -5,6 +5,7 @@
 void MidiScheduler::reset() {
 	current_frame = 0;
 	message_queue.clear();
+	message_queue_dirty = false;
 }
 
 bool MidiScheduler::queue_message(int p_time, MessageType p_type, const MessageParams &p_params) {
@@ -17,6 +18,7 @@ bool MidiScheduler::queue_message(int p_time, MessageType p_type, const MessageP
 	message.time = p_time;
 	message.params = p_params;
 	message_queue.push_back(message);
+	message_queue_dirty = true;
 	return true;
 }
 
@@ -68,9 +70,12 @@ bool MidiScheduler::mix(AudioFrame *p_dst_buffer, int p_frame_count) {
 		return false;
 	}
 
-	std::sort(message_queue.begin(), message_queue.end(), [](const QueuedMessage &a, const QueuedMessage &b) {
-		return a.time < b.time;
-	});
+	if (message_queue_dirty) {
+		std::sort(message_queue.begin(), message_queue.end(), [](const QueuedMessage &a, const QueuedMessage &b) {
+			return a.time < b.time;
+		});
+		message_queue_dirty = false;
+	}
 
 	ADLMIDI_AudioFormat format;
 	format.type = ADLMIDI_SampleType_F32;
