@@ -3,6 +3,7 @@
 build/
 src/*.o
 src/*.os
+src/gen/
 demo/addons/ADLMIDI/bin/*.so
 demo/addons/ADLMIDI/bin/*.dll
 demo/addons/ADLMIDI/bin/*.dylib

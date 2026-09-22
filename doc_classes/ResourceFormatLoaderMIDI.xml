@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="ResourceFormatLoaderMIDI" inherits="ResourceFormatLoader" api_type="extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Loads Standard MIDI Files as [AudioStreamMIDI] resources.
+	</brief_description>
+	<description>
+		The [ResourceFormatLoader] that lets Standard MIDI Files be loaded directly as [AudioStream] resources. It's registered automatically by this extension and recognizes the [code].mid[/code], [code].midi[/code], [code].rmi[/code], [code].xmi[/code], and [code].kar[/code] extensions, reading the file's bytes into a new [AudioStreamMIDI].
+		You won't normally use this class directly; it's what makes [code]load("res://song.mid")[/code] work.
+	</description>
+	<tutorials>
+		<link title="ADLMIDI GDExtension">https://github.com/not-magic/libadlmidi-gdextension</link>
+	</tutorials>
+</class>

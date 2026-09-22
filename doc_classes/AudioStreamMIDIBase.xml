@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AudioStreamMIDIBase" inherits="AudioStream" api_type="extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Shared OPL3 synthesizer configuration for [AudioStreamMIDI] and [AudioStreamMIDISequencer].
+	</brief_description>
+	<description>
+		Abstract base class shared by [AudioStreamMIDI] and [AudioStreamMIDISequencer], holding the libADLMIDI OPL3 synthesizer configuration common to both: emulated chip count ([member num_chips]), instrument bank ([member embedded_bank], or [member bank_data] for a custom WOPL bank), emulator core ([member emulator]), volume scaling curve ([member volume_model]), four-operator channel count ([member four_op_channels]), and brightness handling ([member full_range_brightness]).
+		This class can't be instantiated directly. Use [AudioStreamMIDI] to play a MIDI file, or [AudioStreamMIDISequencer] to drive the synthesizer live with no fixed song.
+	</description>
+	<tutorials>
+		<link title="ADLMIDI GDExtension">https://github.com/not-magic/libadlmidi-gdextension</link>
+	</tutorials>
+	<members>
+		<member name="bank_data" type="PackedByteArray" setter="set_bank_data" getter="get_bank_data" default="PackedByteArray()">
+			Raw bytes of a custom WOPL instrument bank to load. Takes priority over [member embedded_bank] when non-empty.
+		</member>
+		<member name="embedded_bank" type="int" setter="set_embedded_bank" getter="get_embedded_bank" default="0">
+			Index of one of libADLMIDI's built-in instrument banks to use. Ignored if [member bank_data] is set. See [method AudioStreamMIDI.get_bank_count] and [method AudioStreamMIDI.get_bank_name].
+		</member>
+		<member name="emulator" type="int" setter="set_emulator" getter="get_emulator" default="0">
+			Which OPL3 chip emulator core libADLMIDI uses to render audio (Nuked, DOSBox, Opal, YMFM, ESFMu, MAME, and others).
+		</member>
+		<member name="four_op_channels" type="int" setter="set_four_op_channels" getter="get_four_op_channels" default="-1">
+			Number of four-operator channels to allocate across all emulated chips. [code]-1[/code] lets libADLMIDI choose automatically based on the loaded bank.
+		</member>
+		<member name="full_range_brightness" type="bool" setter="set_full_range_brightness" getter="is_full_range_brightness" default="false">
+			If [code]true[/code], MIDI CC74 (brightness) scales over the full 0-127 range instead of the default 0-64.
+		</member>
+		<member name="num_chips" type="int" setter="set_num_chips" getter="get_num_chips" default="4">
+			Number of OPL3 chips to emulate. More chips increase the polyphony limit.
+		</member>
+		<member name="volume_model" type="int" setter="set_volume_model" getter="get_volume_model" default="0">
+			Volume scaling curve libADLMIDI applies to note velocity, matching the behavior of a specific driver or sound card.
+		</member>
+	</members>
+</class>

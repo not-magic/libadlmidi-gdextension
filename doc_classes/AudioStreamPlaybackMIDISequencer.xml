@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AudioStreamPlaybackMIDISequencer" inherits="AudioStreamPlaybackResampled" api_type="extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Plays live, scheduled MIDI messages through an OPL3 synthesizer.
+	</brief_description>
+	<description>
+		The [AudioStreamPlayback] type instantiated by [AudioStreamMIDISequencer]. Unlike [AudioStreamPlaybackMIDI], it plays no fixed song — instead it's a live OPL3 synthesizer driven directly through [method note_on], [method note_off], [method controller_change], [method pitch_bend], and the other methods below.
+		Every method takes a [param time] argument: the audio frame (not seconds) at which the message should take effect, in the same units as [member current_time]. A message scheduled before the current frame is discarded and logs an error instead of being applied immediately. Pass [member current_time] as the time to act right away, or a larger value to schedule ahead.
+		[codeblock]
+		var playback := player.get_stream_playback() as AudioStreamPlaybackMIDISequencer
+		playback.note_on(playback.current_time, 0, 60, 100)
+		playback.note_off(playback.current_time + 22050, 0, 60) # Released half a second later, at 44100 Hz.
+		[/codeblock]
+	</description>
+	<tutorials>
+		<link title="ADLMIDI GDExtension">https://github.com/not-magic/libadlmidi-gdextension</link>
+	</tutorials>
+	<methods>
+		<method name="channel_after_touch">
+			<return type="void" />
+			<param index="0" name="time" type="int" />
+			<param index="1" name="channel" type="int" />
+			<param index="2" name="value" type="int" />
+			<description>
+				Schedules a channel pressure (aftertouch) message at [param time], applying [param value] to every currently sounding note on [param channel].
+			</description>
+		</method>
+		<method name="controller_change">
+			<return type="void" />
+			<param index="0" name="time" type="int" />
+			<param index="1" name="channel" type="int" />
+			<param index="2" name="controller" type="int" />
+			<param index="3" name="value" type="int" />
+			<description>
+				Schedules a MIDI Control Change message at [param time], setting controller number [param controller] to [param value] on [param channel].
+			</description>
+		</method>
+		<method name="note_after_touch">
+			<return type="void" />
+			<param index="0" name="time" type="int" />
+			<param index="1" name="channel" type="int" />
+			<param index="2" name="note" type="int" />
+			<param index="3" name="value" type="int" />
+			<description>
+				Schedules a polyphonic key pressure (aftertouch) message at [param time], applying [param value] to [param note] on [param channel].
+			</description>
+		</method>
+		<method name="note_off">
+			<return type="void" />
+			<param index="0" name="time" type="int" />
+			<param index="1" name="channel" type="int" />
+			<param index="2" name="note" type="int" />
+			<description>
+				Schedules a note off message at [param time], releasing [param note] on [param channel].
+			</description>
+		</method>
+		<method name="note_on">
+			<return type="void" />
+			<param index="0" name="time" type="int" />
+			<param index="1" name="channel" type="int" />
+			<param index="2" name="note" type="int" />
+			<param index="3" name="velocity" type="int" />
+			<description>
+				Schedules a note on message at [param time], starting [param note] on [param channel] with the given [param velocity].
+			</description>
+		</method>
+		<method name="panic">
+			<return type="void" />
+			<param index="0" name="time" type="int" />
+			<description>
+				Schedules an all-notes-off, silence-everything command at [param time].
+			</description>
+		</method>
+		<method name="patch_change">
+			<return type="void" />
+			<param index="0" name="time" type="int" />
+			<param index="1" name="channel" type="int" />
+			<param index="2" name="patch" type="int" />
+			<description>
+				Schedules a MIDI Program Change message at [param time], switching [param channel] to instrument [param patch].
+			</description>
+		</method>
+		<method name="pitch_bend">
+			<return type="void" />
+			<param index="0" name="time" type="int" />
+			<param index="1" name="channel" type="int" />
+			<param index="2" name="value" type="int" />
+			<description>
+				Schedules a pitch bend message at [param time] on [param channel]. [param value] is the raw 14-bit MIDI pitch bend value, centered at [code]8192[/code].
+			</description>
+		</method>
+		<method name="reset_state">
+			<return type="void" />
+			<param index="0" name="time" type="int" />
+			<description>
+				Schedules a reset of every MIDI controller's state (pitch bend, modulation, sustain, and so on) at [param time].
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="current_time" type="int" setter="" getter="get_current_time" default="0">
+			The current playback position, in audio frames. Pass this (or a larger value) as the [code]time[/code] argument to [method note_on] and the other scheduling methods to act now or in the future.
+		</member>
+	</members>
+</class>

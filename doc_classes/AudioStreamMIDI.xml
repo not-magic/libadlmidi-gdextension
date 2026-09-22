@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AudioStreamMIDI" inherits="AudioStreamMIDIBase" api_type="extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Plays a Standard MIDI File through OPL3 FM synthesis.
+	</brief_description>
+	<description>
+		An [AudioStream] that plays a Standard MIDI File through libADLMIDI's OPL3 FM synthesizer emulation, using libADLMIDI's built-in sequencer to interpret the song. It loads automatically when you [method @GlobalScope.load] a [code].mid[/code], [code].midi[/code], [code].rmi[/code], [code].xmi[/code], or [code].kar[/code] file, or can be built in code by assigning raw file bytes to [member midi_data].
+		Beyond the synthesizer configuration inherited from [AudioStreamMIDIBase], this resource holds settings specific to playing a fixed song: looping ([member loop_enabled], [member loop_count]), which song to play in a multi-song file ([member song_number]), and metadata queries such as [method get_title], [method get_track_count], and [method get_loop_start_time].
+		Multiple [AudioStreamPlayer]s can play the same [AudioStreamMIDI] resource at once; each playback gets its own independent synthesizer state.
+	</description>
+	<tutorials>
+		<link title="ADLMIDI GDExtension">https://github.com/not-magic/libadlmidi-gdextension</link>
+	</tutorials>
+	<methods>
+		<method name="get_bank_count" qualifiers="static">
+			<return type="int" />
+			<description>
+				Returns the number of instrument banks built into libADLMIDI, for use with [member AudioStreamMIDIBase.embedded_bank].
+			</description>
+		</method>
+		<method name="get_bank_name" qualifiers="static">
+			<return type="String" />
+			<param index="0" name="index" type="int" />
+			<description>
+				Returns the display name of the built-in instrument bank at [param index].
+			</description>
+		</method>
+		<method name="get_copyright" qualifiers="const">
+			<return type="String" />
+			<description>
+				Returns the copyright notice embedded in the loaded MIDI file, or an empty string if it has none.
+			</description>
+		</method>
+		<method name="get_loop_end_time" qualifiers="const">
+			<return type="float" />
+			<description>
+				Returns the loop end position in seconds, or [code]-1[/code] if the file has no [code]loopEnd[/code] tag.
+			</description>
+		</method>
+		<method name="get_loop_start_time" qualifiers="const">
+			<return type="float" />
+			<description>
+				Returns the loop start position in seconds, or [code]-1[/code] if the file has no [code]loopStart[/code] tag.
+			</description>
+		</method>
+		<method name="get_songs_count" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the number of songs in the loaded file. Files with more than one song (typically XMI) can be switched between with [member song_number].
+			</description>
+		</method>
+		<method name="get_title" qualifiers="const">
+			<return type="String" />
+			<description>
+				Returns the title embedded in the loaded MIDI file, or an empty string if it has none.
+			</description>
+		</method>
+		<method name="get_track_count" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the number of tracks in the loaded MIDI file.
+			</description>
+		</method>
+		<method name="get_track_title" qualifiers="const">
+			<return type="String" />
+			<param index="0" name="index" type="int" />
+			<description>
+				Returns the title of the track at [param index].
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="loop_count" type="int" setter="set_loop_count" getter="get_loop_count" default="-1">
+			Number of times to loop when [member loop_enabled] is [code]true[/code]. [code]-1[/code] loops forever.
+		</member>
+		<member name="loop_enabled" type="bool" setter="set_loop_enabled" getter="is_loop_enabled" default="true">
+			If [code]true[/code], playback loops using the file's [code]loopStart[/code]/[code]loopEnd[/code] tags, if present.
+		</member>
+		<member name="midi_data" type="PackedByteArray" setter="set_midi_data" getter="get_midi_data" default="PackedByteArray()">
+			Raw bytes of the Standard MIDI File to play. Set automatically when loading a [code].mid[/code] file; can also be assigned directly.
+		</member>
+		<member name="song_number" type="int" setter="set_song_number" getter="get_song_number" default="-1">
+			Which song to play in a multi-song file (typically XMI). [code]-1[/code] mixes every song's tracks together.
+		</member>
+	</members>
+</class>

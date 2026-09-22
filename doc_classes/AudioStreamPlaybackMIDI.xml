@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AudioStreamPlaybackMIDI" inherits="AudioStreamPlaybackResampled" api_type="extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Playback instance for an [AudioStreamMIDI].
+	</brief_description>
+	<description>
+		The [AudioStreamPlayback] type instantiated by [AudioStreamMIDI]. Each instance owns its own libADLMIDI player and plays the parent stream's [member AudioStreamMIDI.midi_data] through libADLMIDI's built-in sequencer, so the same [AudioStreamMIDI] resource can be played back concurrently, and independently, by more than one [AudioStreamPlayer].
+		You don't create this directly; it's returned by [method AudioStreamPlayer.get_stream_playback] after assigning an [AudioStreamMIDI] to the player's stream and starting playback.
+	</description>
+	<tutorials>
+		<link title="ADLMIDI GDExtension">https://github.com/not-magic/libadlmidi-gdextension</link>
+	</tutorials>
+	<methods>
+		<method name="get_song_length" qualifiers="const">
+			<return type="float" />
+			<description>
+				Returns the total length of the song in seconds, matching [method AudioStream.get_length].
+			</description>
+		</method>
+		<method name="is_at_end" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if playback has reached the end of the song. Only meaningful once [member AudioStreamMIDI.loop_enabled] is [code]false[/code], or after looping has exhausted [member AudioStreamMIDI.loop_count].
+			</description>
+		</method>
+	</methods>
+</class>

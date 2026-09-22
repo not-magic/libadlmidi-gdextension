@@ -4,6 +4,7 @@
 [ext_resource type="AudioStream" uid="uid://b14aht2laqnxg" path="res://win-passport.mid" id="2_0xm2m"]
 
 [sub_resource type="AudioStreamMIDISequencer" id="AudioStreamMIDISequencer_nqwlg"]
+full_range_brightness = true
 
 [node name="Main" type="Control" unique_id=1312304179]
 layout_mode = 3

@@ -19,6 +19,14 @@ env = SConscript("godot-cpp/SConstruct")
 env.Append(CPPPATH=["src/", "libADLMIDI/include/"])
 sources = Glob("src/*.cpp")
 
+# Embeds doc_classes/*.xml into the extension so AudioStreamMIDI and friends
+# get real entries (descriptions, etc.) in the editor's Help panel, not just
+# auto-generated stubs. Only editor/template_debug builds need it -- release
+# export templates never show the Help panel, matching Godot's own convention.
+if env["target"] in ["editor", "template_debug"]:
+    doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))
+    sources.append(doc_data)
+
 # libADLMIDI doesn't ship its own SCons build, so its sources are compiled
 # directly here instead. This list (and the ENABLE_END_SILENCE_SKIPPING
 # define below) mirrors libADLMIDI's default CMake configuration

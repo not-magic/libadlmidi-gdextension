@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AudioStreamMIDISequencer" inherits="AudioStreamMIDIBase" api_type="extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		A live, code-driven OPL3 synthesizer with no fixed song.
+	</brief_description>
+	<description>
+		An [AudioStream] with no fixed song: a live OPL3 synthesizer driven entirely from code, for procedurally generated music. Beyond the synthesizer configuration inherited from [AudioStreamMIDIBase] ([member AudioStreamMIDIBase.num_chips], [member AudioStreamMIDIBase.emulator], ...), it adds nothing of its own — actually playing notes is done through the [AudioStreamPlaybackMIDISequencer] instance it produces.
+		[codeblock]
+		var stream := AudioStreamMIDISequencer.new()
+		player.stream = stream
+		player.play()
+
+		var playback := player.get_stream_playback() as AudioStreamPlaybackMIDISequencer
+		playback.note_on(playback.current_time, 0, 60, 100) # Channel 0, middle C, velocity 100.
+		[/codeblock]
+	</description>
+	<tutorials>
+		<link title="ADLMIDI GDExtension">https://github.com/not-magic/libadlmidi-gdextension</link>
+	</tutorials>
+</class>
