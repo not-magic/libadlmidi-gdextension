@@ -21,23 +21,28 @@ jobs:
           - platform: macos
             os: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.x"
 
       - name: Install SCons
         run: pip install scons
 
+      # ilammy/msvc-dev-cmd is unmaintained and stuck on the Node.js 20
+      # runtime GitHub removed; vs-shell does the same job as a plain
+      # PowerShell composite action, so it has no Node runtime to deprecate.
       - name: Set up MSVC
         if: matrix.platform == 'windows'
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
 
       - name: Cache SCons build
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .scons_cache
           key: scons-ci-${{ matrix.platform }}-${{ hashFiles('src/**', 'SConstruct', 'extension_api.json') }}

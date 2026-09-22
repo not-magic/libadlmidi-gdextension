@@ -35,24 +35,29 @@ jobs:
           - platform: macos
             os: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
           ref: ${{ github.event.inputs.tag || github.ref }}
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.x"
 
       - name: Install SCons
         run: pip install scons
 
+      # ilammy/msvc-dev-cmd is unmaintained and stuck on the Node.js 20
+      # runtime GitHub removed; vs-shell does the same job as a plain
+      # PowerShell composite action, so it has no Node runtime to deprecate.
       - name: Set up MSVC
         if: matrix.platform == 'windows'
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
 
       - name: Cache SCons build
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .scons_cache
           key: scons-release-${{ matrix.platform }}-${{ hashFiles('src/**', 'SConstruct', 'extension_api.json') }}
@@ -70,7 +75,7 @@ jobs:
         run: scons platform=${{ matrix.platform }} target=template_release -j4
 
       - name: Upload binaries
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: adlmidi-bin-${{ matrix.platform }}
           path: demo/addons/ADLMIDI/bin/
@@ -80,12 +85,12 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.inputs.tag || github.ref }}
 
       - name: Download binaries for every platform
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: adlmidi-bin-*
           path: demo/addons/ADLMIDI/bin
@@ -93,11 +98,12 @@ jobs:
 
       - name: Zip addon
         run: |
+          cp LICENSE demo/addons/ADLMIDI/LICENSE
           cd demo/addons
           zip -r "${{ github.workspace }}/ADLMIDI.zip" ADLMIDI
 
       - name: Create release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.event.inputs.tag || github.ref_name }}
           files: ADLMIDI.zip
