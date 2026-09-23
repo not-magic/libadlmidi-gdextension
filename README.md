@@ -18,7 +18,7 @@ It adds two new `AudioStream` types:
 
 ## Requirements
 
-- Godot 4.5 or newer (bindings are generated against the Godot 4.7.2 API, see `extension_api.json`).
+- Godot 4.5 or newer (bindings are generated against the Godot 4.5 API bundled with the `godot-cpp` submodule).
 - [SCons](https://scons.org/) and a C++17-capable compiler to build the extension from source.
 - Git (for submodules).
 

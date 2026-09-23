@@ -45,7 +45,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .scons_cache
-          key: scons-ci-${{ matrix.platform }}-${{ hashFiles('src/**', 'SConstruct', 'extension_api.json') }}
+          key: scons-ci-${{ matrix.platform }}-${{ hashFiles('src/**', 'SConstruct', 'godot-cpp/gdextension/extension_api.json') }}
           restore-keys: |
             scons-ci-${{ matrix.platform }}-
 

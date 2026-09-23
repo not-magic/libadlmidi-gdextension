@@ -24,9 +24,8 @@ Playback classes derive from godot-cpp's **`AudioStreamPlaybackResampled`** (not
 ## Repository layout
 
 - `src/` — the GDExtension C++ source (`register_types.*`, `audio_stream_midi_base.*`, `audio_stream_midi.*`, `audio_stream_midi_sequencer.*`, `resource_format_loader_midi.*`) plus `midi_scheduler.*`, the one file in here with no Godot dependency (see below).
-- `godot-cpp/` — git submodule (branch `4.5`), the official C++ bindings for Godot's GDExtension API.
+- `godot-cpp/` — git submodule (branch `4.5`), the official C++ bindings for Godot's GDExtension API. Bindings are generated from its bundled `godot-cpp/gdextension/extension_api.json` (Godot 4.5), so the target Godot API version is set by which godot-cpp commit the submodule points at; `compatibility_minimum` in `demo/addons/ADLMIDI/adlmidi.gdextension` should match it.
 - `libADLMIDI/` — git submodule, the MIDI/OPL3 synth library being wrapped. Public C API: `libADLMIDI/include/adlmidi.h` (`extern "C"`, `adl_*`/`ADL_*`).
-- `extension_api.json` (repo root) — GDExtension API dump from Godot v4.7.2. The root `SConstruct` defaults `custom_api_file` to this so bindings match the target Godot version (overridable with `scons custom_api_file=...`).
 - `demo/` — a minimal Godot project for manually exercising the extension, with the addon already installed at `demo/addons/ADLMIDI/` (`adlmidi.gdextension` is the extension descriptor, `plugin.cfg`/`plugin.gd` are a no-op `EditorPlugin` purely so it shows up under Project Settings > Plugins; `demo/addons/ADLMIDI/bin/*.so|*.dll|*.dylib` are build output, gitignored). This is also the layout to copy into `res://addons/` in another project, and the shape a Godot Asset Library submission for this extension would use.
 - `tests/` — standalone libADLMIDI-level regression tests, opt-in via `scons tests=yes` (see "Standalone tests" below). `tests/bin/` is build output (gitignored).
 - `build/libADLMIDI/` — libADLMIDI's compiled object files (gitignored). The root `SConstruct` builds them here via `VariantDir` instead of in-place, specifically so the `libADLMIDI/` submodule's working tree never picks up untracked build artifacts.
@@ -68,7 +67,7 @@ scons platform=linux target=template_debug tests=yes run_tests=yes   # ...and ru
 - `build.yml` — on every push to `main` and on PRs, builds `template_debug` and runs `tests=yes run_tests=yes` on Linux, Windows, and macOS runners. Compile-only sanity check; doesn't publish anything.
 - `release.yml` — on pushing a `v*` tag (or manual dispatch with a tag input), builds `template_debug` + `template_release` for all three platforms, then zips `demo/addons/ADLMIDI/` (source-free, with every platform's binaries) into a GitHub Release asset whose internal layout is `addons/ADLMIDI/...`, so it extracts directly into a project root. Deliberately does **not** commit binaries into the repo — the Asset Library's GitHub-commit-based download can't see them either way, so a submission should use the release zip as a "Custom" download URL rather than pointing at a commit.
 
-Both cache SCons build objects via `actions/cache` keyed on `src/`, `SConstruct`, and `extension_api.json` (using SCons's built-in `SCONS_CACHE` support, already wired into godot-cpp's `SConstruct`) to avoid recompiling godot-cpp's ~2100-file binding set from scratch on every run.
+Both cache SCons build objects via `actions/cache` keyed on `src/`, `SConstruct`, and `godot-cpp/gdextension/extension_api.json` (using SCons's built-in `SCONS_CACHE` support, already wired into godot-cpp's `SConstruct`) to avoid recompiling godot-cpp's ~2100-file binding set from scratch on every run.
 
 ## Architecture notes for future work
 
