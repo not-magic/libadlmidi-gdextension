@@ -58,11 +58,18 @@ jobs:
         with:
           arch: x64
 
+      # Pinned godot-cpp/libADLMIDI commits, so bumping either submodule
+      # invalidates the cache key too.
+      - name: Get submodule revisions
+        id: submodules
+        shell: bash
+        run: echo "hash=$(git submodule status | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
       - name: Cache SCons build
         uses: actions/cache@v6
         with:
           path: .scons_cache
-          key: scons-release-${{ matrix.platform }}-${{ hashFiles('src/**', 'SConstruct', 'godot-cpp/gdextension/extension_api.json') }}
+          key: scons-release-${{ matrix.platform }}-${{ hashFiles('src/**', 'SConstruct') }}-${{ steps.submodules.outputs.hash }}
           restore-keys: |
             scons-release-${{ matrix.platform }}-
 
