@@ -2,11 +2,13 @@ name: Release
 
 # Builds template_debug + template_release for linux/windows/macos, then
 # packages demo/addons/ADLMIDI/ (source-free, binaries for every platform
-# included) into a zip attached to a GitHub Release. That zip is what's
-# meant to be distributed -- either linked directly, or used as the
-# "Custom" download URL in a Godot Asset Library submission, since the
-# Asset Library's GitHub-commit-based download can't include build output
-# that (deliberately) isn't committed to the repo.
+# included) into a zip attached to a GitHub Release. The zip's internal
+# layout is addons/ADLMIDI/..., so it extracts directly into a project's
+# root (res://). That zip is what's meant to be distributed -- either
+# linked directly, or used as the "Custom" download URL in a Godot Asset
+# Library submission, since the Asset Library's GitHub-commit-based
+# download can't include build output that (deliberately) isn't committed
+# to the repo.
 on:
   push:
     tags:
@@ -99,8 +101,8 @@ jobs:
       - name: Zip addon
         run: |
           cp LICENSE demo/addons/ADLMIDI/LICENSE
-          cd demo/addons
-          zip -r "${{ github.workspace }}/ADLMIDI.zip" ADLMIDI
+          cd demo
+          zip -r "${{ github.workspace }}/ADLMIDI.zip" addons/ADLMIDI
 
       - name: Create release
         uses: softprops/action-gh-release@v3

@@ -104,7 +104,7 @@ This extension builds and has been manually tested end-to-end in the Godot edito
 
 ## Releases
 
-Pushing a `v*` tag (or running the "Release" workflow manually with a tag) builds `template_debug` and `template_release` for Linux, Windows, and macOS, then publishes a GitHub Release with a zip of the ready-to-install `demo/addons/ADLMIDI/` folder (binaries for every platform included) attached.
+Pushing a `v*` tag (or running the "Release" workflow manually with a tag) builds `template_debug` and `template_release` for Linux, Windows, and macOS, then publishes a GitHub Release with a zip of the ready-to-install `demo/addons/ADLMIDI/` folder (binaries for every platform included) attached. The zip contains `addons/ADLMIDI/`, so extract it into your project's root folder.
 
 ## License
 

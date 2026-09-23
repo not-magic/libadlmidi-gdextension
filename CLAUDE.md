@@ -66,7 +66,7 @@ scons platform=linux target=template_debug tests=yes run_tests=yes   # ...and ru
 ### CI / releases (.github/workflows/)
 
 - `build.yml` — on every push to `main` and on PRs, builds `template_debug` and runs `tests=yes run_tests=yes` on Linux, Windows, and macOS runners. Compile-only sanity check; doesn't publish anything.
-- `release.yml` — on pushing a `v*` tag (or manual dispatch with a tag input), builds `template_debug` + `template_release` for all three platforms, then zips `demo/addons/ADLMIDI/` (source-free, with every platform's binaries) into a GitHub Release asset. Deliberately does **not** commit binaries into the repo — the Asset Library's GitHub-commit-based download can't see them either way, so a submission should use the release zip as a "Custom" download URL rather than pointing at a commit.
+- `release.yml` — on pushing a `v*` tag (or manual dispatch with a tag input), builds `template_debug` + `template_release` for all three platforms, then zips `demo/addons/ADLMIDI/` (source-free, with every platform's binaries) into a GitHub Release asset whose internal layout is `addons/ADLMIDI/...`, so it extracts directly into a project root. Deliberately does **not** commit binaries into the repo — the Asset Library's GitHub-commit-based download can't see them either way, so a submission should use the release zip as a "Custom" download URL rather than pointing at a commit.
 
 Both cache SCons build objects via `actions/cache` keyed on `src/`, `SConstruct`, and `extension_api.json` (using SCons's built-in `SCONS_CACHE` support, already wired into godot-cpp's `SConstruct`) to avoid recompiling godot-cpp's ~2100-file binding set from scratch on every run.
 
