@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 import os
 
-# Pin godot-cpp's bindings to the Godot version this extension was written
-# against, unless the caller already asked for a specific api_version or
-# custom_api_file on the command line (e.g. `scons custom_api_file=...`).
-ARGUMENTS.setdefault("custom_api_file", "extension_api.json")
+# Godot API version we build against
+ARGUMENTS.setdefault("api_version", "4.5")
 
 env = SConscript("godot-cpp/SConstruct")
 
