@@ -2,7 +2,7 @@
 import os
 
 # Godot API version we build against
-ARGUMENTS.setdefault("api_version", "4.5")
+# ARGUMENTS.setdefault("api_version", "4.5")
 
 env = SConscript("godot-cpp/SConstruct")
 
