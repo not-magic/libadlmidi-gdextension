@@ -12,3 +12,4 @@ demo/.godot/
 tests/bin/
 tests/*.o
 tests/*.os
+*.sublime-workspace
